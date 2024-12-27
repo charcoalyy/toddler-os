@@ -8,7 +8,7 @@ LDFLAGS?=
 LIBS?=
 
 DESTDIR?=
-PREFIX?=/usr/local
+PREFIX?=$(shell pwd)/local
 EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib

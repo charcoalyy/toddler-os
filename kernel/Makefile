@@ -8,7 +8,7 @@ LDFLAGS?=
 LIBS?=
 
 DESTDIR?=
-PREFIX?=/usr/local
+PREFIX?=$(shell pwd)/local
 EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
