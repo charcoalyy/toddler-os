@@ -4,7 +4,7 @@ HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
 
 CFLAGS?=-O2 -g
 CPPFLAGS?=
-LDFLAGS?=
+LDFLAGS = -L$(SYSROOT)/home/alina/src/my-toddler-os/toddler-os/lib -lk # use cross-compiler's linker, not system linker
 LIBS?=
 
 DESTDIR?=
