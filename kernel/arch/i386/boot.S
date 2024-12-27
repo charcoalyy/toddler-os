@@ -1,39 +1,31 @@
-# Declare constants for the multiboot header.
-.set ALIGN,    1<<0             # align loaded modules on page boundaries
-.set MEMINFO,  1<<1             # provide memory map
-.set FLAGS,    ALIGN | MEMINFO  # this is the Multiboot 'flag' field
-.set MAGIC,    0x1BADB002       # 'magic number' lets bootloader find the header
-.set CHECKSUM, -(MAGIC + FLAGS) # checksum of above, to prove we are multiboot
+.set ALIGN,     1 << 0              /* ensures kernel is loaded at proper memory handle */
+.set MEMINFO,   1<<1                /* gives kernel memory map information */
+.set FLAGS,     ALIGN | MEMINFO     /* passes both the above along to kernel */
+.set MAGIC,     0x1BADB002          /* code that bootloader looks for to identify kernel */
+.set CHECKSUM,  -(MAGIC + FLAGS)    /* double checks the above for corruption */
 
-# Declare a header as in the Multiboot Standard.
+/* declare multiboot header  */
 .section .multiboot
 .align 4
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
 
-# Reserve a stack for the initial thread.
+/* defines memory for a stack */
 .section .bss
 .align 16
 stack_bottom:
-.skip 16384 # 16 KiB
+.skip 16384
 stack_top:
 
-# The kernel entry point.
+/* executable code where bootloader hands control to kernel */
 .section .text
 .global _start
 .type _start, @function
 _start:
-	movl $stack_top, %esp
-
-	# Call the global constructors.
-	call _init
-
-	# Transfer control to the main kernel.
-	call kernel_main
-
-	# Hang if kernel_main unexpectedly returns.
-	cli
-1:	hlt
-	jmp 1b
+    mov $stack_top, %esp            /* set up stack pointer */
+    call kernel_main                /* call kernel */
+    cli                             /* disable interrupts */
+1:  hlt                             /* halt (sleep) the CPU (since now kernel is in infinite loop) */
+    jmp 1b                          /* keep repeating the line above */
 .size _start, . - _start
