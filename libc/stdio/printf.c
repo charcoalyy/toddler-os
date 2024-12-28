@@ -71,6 +71,23 @@ int printf(const char* restrict format, ...) {
 			if (!print(str, len))
 				return -1;
 			written += len;
+		} else if (*format == 'd') {
+			format++;
+
+			int num = va_arg(parameters, int);
+
+			char str[12];
+			inttostr(num, str);
+
+			size_t len = strlen(str);
+			if (maxrem < len) {
+				return -1;
+			}
+			if (!print(str, len)) {
+				return -1;
+			}
+
+			written += len;
 		} else {
 			// return to % and treat as plain text if unsupported
 			format = format_begun_at;
